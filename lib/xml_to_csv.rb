@@ -1,5 +1,3 @@
 require "xml_to_csv/version"
-
-module XmlToCsv
-  # Your code goes here...
-end
+require "xml_to_csv/documents/stats"
+require "xml_to_csv/documents/csv"

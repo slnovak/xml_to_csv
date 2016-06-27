@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+require "bundler/setup"
+require "thor"
+require "xml_to_csv"
+
+class App < Thor
+  package_name "XML-to-CSV"
+  default_command :convert
+
+  desc "convert XML_FILE", "convert XML_FILE to CSV output"
+  method_option :record_name, aliases: "-r", :desc => "Specify name of records to parse."
+  def convert(xml_filename)
+    unless record_name = options[:record_name]
+      exit 1
+    end
+
+    file = File.open(File.expand_path(xml_filename))
+
+    stats = XmlToCsv::Documents::Stats.parse(file,
+      record_name: record_name)
+
+    file.rewind
+
+    csv = XmlToCsv::Documents::CSV.parse(file,
+      record_name: record_name,
+      headers: stats.headers,
+      output: $stdout)
+  end
+end
+
+App.start
